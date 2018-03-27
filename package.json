@@ -1,0 +1,27 @@
+{
+  "name": "@phillipemoreira/interviews",
+  "version": "0.0.1",
+  "description": "interview algorithms and notes",
+  "scripts": {
+    "lint": "eslint src --fix",
+    "test": "eslint src --fix && jest --coverage src",
+    "test:watch": "jest --watch src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phillipemoreira/interviews.git"
+  },
+  "keywords": [
+    "interviews"
+  ],
+  "author": "Phillipe Moreira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phillipemoreira/interviews/issues"
+  },
+  "homepage": "https://github.com/phillipemoreira/interviews#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "jest": "^22.4.3"
+  }
+}
