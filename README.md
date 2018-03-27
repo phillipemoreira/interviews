@@ -1,8 +1,8 @@
-# interviews
+# Interviews
 code interview algorithms and notes
 
-## algorithms
+## Algorithms
 - [merge-sort](src/merge-sort.js)
 
-## running & testing
+## Running & testing
 `npm run test`
