@@ -1,24 +1,49 @@
-const {isUnique} = require("./1.1-unique");
+const {isUnique, isUniqueWithoutHT} = require("./1.1-unique");
 
 describe("CCI-1.1 - unique letters string", () => {
-    it("should return false when empty", () => {
-        expect(isUnique("")).toEqual(false);
+    describe("With hashtable", () => {
+        it("should return false when empty", () => {
+            expect(isUnique("")).toEqual(false);
+        });
+
+        it("should return true when single letter", () => {
+            expect(isUnique("a")).toEqual(true);
+        });
+
+        it("should return true", () => {
+            expect(isUnique("abutre")).toEqual(true);
+        });
+
+        it("should return false", () => {
+            expect(isUnique("helolxtl")).toEqual(false);
+        });
+
+        it("should return false in big case", () => {
+            const input = "Phil.master nu";
+            expect(isUnique(input)).toEqual(true);
+        });
     });
 
-    it("should return true when single letter", () => {
-        expect(isUnique("a")).toEqual(true);
-    });
+    describe("Without Hashtable", () => {
+        it("should return false when empty", () => {
+            expect(isUniqueWithoutHT("")).toEqual(false);
+        });
 
-    it("should return true", () => {
-        expect(isUnique("abutre")).toEqual(true);
-    });
+        it("should return true when single letter", () => {
+            expect(isUniqueWithoutHT("a")).toEqual(true);
+        });
 
-    it("should return false", () => {
-        expect(isUnique("hello")).toEqual(false);
-    });
+        it("should return true", () => {
+            expect(isUniqueWithoutHT("abutre")).toEqual(true);
+        });
 
-    it("should return false in big case", () => {
-        const input = "Phil master nu";
-        expect(isUnique(input)).toEqual(true);
+        it("should return false", () => {
+            expect(isUniqueWithoutHT("helolxtl")).toEqual(false);
+        });
+
+        it("should return false in big case", () => {
+            const input = "Phil.master nu";
+            expect(isUniqueWithoutHT(input)).toEqual(true);
+        });
     });
 });
