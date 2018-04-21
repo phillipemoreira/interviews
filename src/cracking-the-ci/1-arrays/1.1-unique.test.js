@@ -22,6 +22,14 @@ describe("CCI-1.1 - unique letters string", () => {
             const input = "Phil.master nu";
             expect(isUnique(input)).toEqual(true);
         });
+
+        it("should return false in edge case", () => {
+            const input = "fhaoiadshfkdsajhfoqewhriuhasdfidsaflkhdsfdsaiofhdsaifuhdasoifuhdasufhioeuh" +
+            "qwriuhreaiohaofiuhdsifouhdasifouhasdoifuhasdoifuhadsoifuhoasdiuhfoaisduhfoiasduhfoidasuhf" +
+            "xcbvxzmaireyioqhfdisahfuisadhfoidsauhf";
+
+            expect(isUnique(input)).toEqual(false);
+        });
     });
 
     describe("Without Hashtable", () => {
@@ -44,6 +52,14 @@ describe("CCI-1.1 - unique letters string", () => {
         it("should return false in big case", () => {
             const input = "Phil.master nu";
             expect(isUniqueWithoutHT(input)).toEqual(true);
+        });
+
+        it("should return false in edge case", () => {
+            const input = "fhaoiadshfkdsajhfoqewhriuhasdfidsaflkhdsfdsaiofhdsaifuhdasoifuhdasufhioeuh" +
+            "qwriuhreaiohaofiuhdsifouhdasifouhasdoifuhasdoifuhadsoifuhoasdiuhfoaisduhfoiasduhfoidasuhf" +
+            "xcbvxzmaireyioqhfdisahfuisadhfoidsauhf";
+
+            expect(isUniqueWithoutHT(input)).toEqual(false);
         });
     });
 });
