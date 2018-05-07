@@ -3,6 +3,27 @@
 var input = require('fs').readFileSync(__dirname + '/blocks-stdin', 'utf8');
 var lines = input.split('\n');
 
+const keyIt = (arr) => {
+  const key = [];
+  let counter = 0;
+  const aux = {};
+
+  for (let i = 0; i < arr.length; i++) {
+    const v = arr[i];
+    if (aux[v] >= 0) {
+      key.push(aux[v]);
+    } else {
+      aux[v] = counter;
+      key.push(counter);
+      counter++;
+    }
+  }
+
+  return key;
+}
+
+const calculateUnique = (colors) => colors.filter((v, i, a) => a.indexOf(v) === i).length
+
 const countLeft = (colors, i) => {
   let result = 0;
 
@@ -31,59 +52,83 @@ const countRight = (colors, i) => {
   return result;
 }
 
-const pop = ({blocks, checker, colors, points}, i) => {
-   // Calculating popped to left and right;
-   const l = countLeft(colors, i);
-   const r = countRight(colors, i);
-   const totalPopped = l + r + 1;
+const pop = ({blocks, checker, colors, steps}, i) => {
+  // Calculating popped to left and right;
+  const l = countLeft(colors, i);
+  const r = countRight(colors, i);
+  const totalPopped = l + r + 1;
 
-   // Recreating colors array;
-   const a = colors.slice(0, i - l);
-   const b = colors.slice(i + r + 1, colors.length);
-   const newColors = a.concat(b);
+  // Recreating colors array;
+  const a = colors.slice(0, i - l);
+  const b = colors.slice(i + r + 1, colors.length);
+  const newColors = a.concat(b);
 
-   return {
-     blocks: blocks - totalPopped,
-     checker: checker,
-     colors: newColors,
-     points: points + totalPopped * totalPopped
-   };
+  return {
+    blocks: blocks - totalPopped,
+    checker: checker,
+    colors: newColors,
+    uniqueColors: calculateUnique(newColors),
+    points: totalPopped * totalPopped,
+    steps: steps + 1
+  };
 }
 
-const doCalculate = (foo, max) => {
-  const {blocks, points} = foo;
+let calls = 0;
+let min = 202;
+let cacheUsed = 0;
+let cache = {};
 
-  if (blocks > 0) {
-    let localMax = -1;
-    for (let i = 0; i < blocks; i += 1) {
-      const popped = pop(foo, i);
+const doCalculate = (obj, points) => {
+  // Counting calls;
+  calls++;
 
-      if (foo.checker[popped.colors] && popped.colors.length > 0) {
-        localMax = foo.checker[popped.colors];
-      } else {
-        const cur = doCalculate(popped, points);
-        localMax = cur > localMax ? cur : localMax;
-        foo.checker[popped.colors] = localMax;
-      }
-    }
+  const locals = [0];
+  const {blocks, colors, steps} = obj;
+  // Very important
+  const key = keyIt(colors);
 
-    return localMax > max ? localMax : max;
+  // Using simplified key cache
+  if (cache[key] > 0) {
+    cacheUsed++;
+    return cache[key] + points;
   }
 
-  return points > max ? points : max;
+  for (let i = 0; i < blocks; i += 1) {
+    const popped = pop(obj, i);
+
+    // Checking unecessary work.
+    if (popped.steps + popped.uniqueColors < min) {
+      const child = doCalculate(popped, popped.points);
+      locals.push(child);
+    }
+  }
+
+  const localMax = locals.reduce((a, b) => Math.max(a, b));
+  const max = points + localMax;
+
+  // Caching max.
+  if (colors.length > 0) {
+    cache[key] = localMax;
+  }
+
+  // Got to the bottom, storing the current minimum number of steps to get there.
+  if (colors.length === 0) {
+    min = min < steps ? min : steps;
+  }
+
+  return max;
 }
 
 const calculate = (blocks, colors) => {
   const obj = {
     blocks: blocks,
-    checker: {},
     colors: colors,
-    points: 0
+    uniqueColors: calculateUnique(colors),
+    points: 0,
+    steps: 0
   };
 
-  doCalculate(obj, 0);
-  console.log(Object.keys(obj.checker).length);
-  return 0;
+  return doCalculate(obj, 0, -1);
 }
 
 // ====================================================
@@ -94,7 +139,16 @@ for (let i = 1; i <= tests; i++) {
     const blocks = parseInt(lines.shift());
     const colors = lines.shift().split(' ');
 
-    const max = calculate(blocks, colors)
+    min = 202;
+    calls = 0;
+    cacheUsed = 0;
+    cache = {};
 
-    // console.log("Case " + i + ": " + max);
+    const max = calculate(blocks, colors)
+    console.log("Case " + i + ": " + max);
+
+    console.log("|-cache used: " + cacheUsed + " times.");
+    console.log("|-number of cached combinations: " + Object.keys(cache).length);
+    console.log("|-calls to doCalculate: " + calls);
+    console.log('=============================>');
 }

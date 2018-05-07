@@ -76,7 +76,6 @@ module.exports = {
         "multiline-comment-style": "error",
         "new-cap": "error",
         "new-parens": "error",
-        "newline-before-return": "error",
         "newline-per-chained-call": "error",
         "no-alert": "error",
         "no-array-constructor": "error",
