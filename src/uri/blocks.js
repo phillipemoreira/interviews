@@ -52,7 +52,7 @@ const countRight = (colors, i) => {
   return result;
 }
 
-const pop = ({blocks, checker, colors, steps}, i) => {
+const pop = ({blocks, colors, steps}, i) => {
   // Calculating popped to left and right;
   const l = countLeft(colors, i);
   const r = countRight(colors, i);
@@ -65,7 +65,6 @@ const pop = ({blocks, checker, colors, steps}, i) => {
 
   return {
     blocks: blocks - totalPopped,
-    checker: checker,
     colors: newColors,
     uniqueColors: calculateUnique(newColors),
     points: totalPopped * totalPopped,
@@ -119,15 +118,16 @@ const doCalculate = (obj, points) => {
   return max;
 }
 
-const calculate = (blocks, colors) => {
-  const obj = {
-    blocks: blocks,
-    colors: colors,
-    uniqueColors: calculateUnique(colors),
-    points: 0,
-    steps: 0
-  };
+const createObj = (colors) => ({
+  blocks: colors.length,
+  colors: colors,
+  uniqueColors: calculateUnique(colors),
+  points: 0,
+  steps: 0
+});
 
+const calculate = (blocks, colors) => {
+  const obj = createObj(colors);
   return doCalculate(obj, 0, -1);
 }
 
