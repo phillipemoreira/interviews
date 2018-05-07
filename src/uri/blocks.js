@@ -31,7 +31,7 @@ const countRight = (colors, i) => {
   return result;
 }
 
-const pop = ({blocks, colors, points}, i) => {
+const pop = ({blocks, checker, colors, points}, i) => {
    // Calculating popped to left and right;
    const l = countLeft(colors, i);
    const r = countRight(colors, i);
@@ -43,9 +43,10 @@ const pop = ({blocks, colors, points}, i) => {
    const newColors = a.concat(b);
 
    return {
-     "blocks": blocks - totalPopped,
-     "colors": newColors,
-     "points": points + totalPopped * totalPopped
+     blocks: blocks - totalPopped,
+     checker: checker,
+     colors: newColors,
+     points: points + totalPopped * totalPopped
    };
 }
 
@@ -56,8 +57,14 @@ const doCalculate = (foo, max) => {
     let localMax = -1;
     for (let i = 0; i < blocks; i += 1) {
       const popped = pop(foo, i);
-      const cur = doCalculate(popped, points);
-      localMax = cur > localMax ? cur : localMax;
+
+      if (foo.checker[popped.colors] && popped.colors.length > 0) {
+        localMax = foo.checker[popped.colors];
+      } else {
+        const cur = doCalculate(popped, points);
+        localMax = cur > localMax ? cur : localMax;
+        foo.checker[popped.colors] = localMax;
+      }
     }
 
     return localMax > max ? localMax : max;
@@ -67,15 +74,16 @@ const doCalculate = (foo, max) => {
 }
 
 const calculate = (blocks, colors) => {
-  if (blocks > 9) return 0;
-
   const obj = {
-    "blocks": blocks,
-    "colors": colors,
-    "points": 0
+    blocks: blocks,
+    checker: {},
+    colors: colors,
+    points: 0
   };
 
-  return doCalculate(obj, 0);
+  doCalculate(obj, 0);
+  console.log(Object.keys(obj.checker).length);
+  return 0;
 }
 
 // ====================================================
@@ -88,5 +96,5 @@ for (let i = 1; i <= tests; i++) {
 
     const max = calculate(blocks, colors)
 
-    console.log("Case " + i + ": " + max);
+    // console.log("Case " + i + ": " + max);
 }
