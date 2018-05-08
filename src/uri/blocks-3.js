@@ -91,12 +91,32 @@ let min = 202;
 let cacheUsed = 0;
 let cache = {};
 
+const compareFoo = (a, b) => a.eu - b.eu
+
+const orderBestCandidates = ({steps, colors}) => {
+  const euByColor = [];
+
+  // Calculating estimation
+  for (let i = 0; i < colors.length; i++) {
+    const estimation = pop({colors, blocks: colors.length, steps: 0}, i);
+    const eu = steps + calculateUnique(estimation.colors);
+    const foo = {eu, index: i};
+
+    euByColor.push(foo);
+  }
+
+  // Ordering
+  const sorted = euByColor.sort(compareFoo);
+  const bestCandidates = sorted.map((f) => f.index);
+  return bestCandidates;
+}
+
 const doCalculate = (obj, points) => {
   // Counting calls;
   calls++;
 
   const locals = [0];
-  const {blocks, colors, steps} = obj;
+  const {colors, steps} = obj;
   // Very important
   const key = keyIt(colors);
 
@@ -106,9 +126,9 @@ const doCalculate = (obj, points) => {
     return cache[key] + points;
   }
 
-  // ONE
-  for (let i = 0; i < blocks; i += 1) {
-    const popped = pop(obj, i);
+  const bestCandidates = orderBestCandidates({steps, colors});
+  for (let i = 0; i < bestCandidates.length; i++) {
+    const popped = pop(obj, bestCandidates[i]);
 
     // Checking unecessary work.
     if (popped.steps + popped.uniqueColors < min) {
@@ -164,7 +184,6 @@ for (let i = 1; i <= tests; i++) {
     console.timeEnd('calculate');
 
     console.log("Case " + i + ": " + max);
-
     console.log("|-cache used: " + cacheUsed + " times.");
     console.log("|-number of cached combinations: " + Object.keys(cache).length);
     console.log("|-calls to doCalculate: " + calls);
