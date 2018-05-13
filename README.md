@@ -8,6 +8,7 @@ code interview algorithms and notes
 ## Cracking the code interview
 ### Arrays
 - [1.1](src/cracking-the-ci/1-arrays/1.1-unique.js)
+- [1.2](src/cracking-the-ci/1-arrays/1.2-is-permutation.js)
 
 ## URI online judge
 - [basic](src/uri/basic.js)

@@ -1,4 +1,4 @@
-const {isUnique, isUniqueWithoutHT} = require("./1.1-unique");
+const {isUnique, isUniqueWithoutHT} = require("../1.1-unique");
 
 describe("CCI-1.1 - unique letters string", () => {
     describe("With hashtable", () => {
