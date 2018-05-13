@@ -2,8 +2,8 @@
 code interview algorithms and notes
 
 ## Algorithms
-- [merge-sort](src/merge-sort.js)
-- [Dijkstra](src/dijkstra.js)
+- [merge-sort](src/algorithms/merge-sort.js)
+- [dijkstra](src/algorithms/dijkstra.js)
 
 ## Cracking the code interview
 ### Arrays
